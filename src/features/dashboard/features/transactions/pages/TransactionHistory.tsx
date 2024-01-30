@@ -8,7 +8,7 @@ import TransactionStatus from '../components/TransactionStatus'
 import { Button } from '@/common/components/ui/button'
 import { Maximize2Icon } from 'lucide-react'
 
-const MyPartner = () => {
+const TransactionHistory = () => {
   const onError = usePrintErrorMessage()
 
   const {
@@ -134,4 +134,4 @@ const MyPartner = () => {
   )
 }
 
-export default MyPartner
+export default TransactionHistory
