@@ -28,6 +28,7 @@ export const useFetchUser = (userId: string) =>
   useQuery({
     queryKey: userQueryKeys.user(userId),
     queryFn: () => fetchUser(userId),
+    enabled: Boolean(userId),
   })
 
 export const useCreateUser = () => {

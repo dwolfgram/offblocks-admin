@@ -12,10 +12,12 @@ export const useFetchAccountTransactions = (accountId: string) =>
   useQuery({
     queryKey: transactionQueryKeys.transactions(accountId),
     queryFn: () => fetchAccountTransactions(accountId),
+    enabled: Boolean(accountId),
   })
 
 export const useFetchTransaction = (accountId: string, txId: string) =>
   useQuery({
     queryKey: transactionQueryKeys.transaction(accountId, txId),
     queryFn: () => fetchTransaction(accountId, txId),
+    enabled: Boolean(accountId) && Boolean(txId),
   })

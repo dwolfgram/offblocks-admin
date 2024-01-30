@@ -44,7 +44,7 @@ export const db = factory({
 persist(db)
 
 export const dropDB = () => drop(db)
-//dropDB()
+// dropDB()
 
 export const createDummyData = (userId: string) => {
   const user = db.user.findFirst({ where: { id: { equals: userId } } })
@@ -62,20 +62,21 @@ export const createDummyData = (userId: string) => {
     owner: user,
   })
   for (const _ of Array.from({ length: 200 })) {
+    const status = Math.random() < 0.5 ? 'confirmed' : 'pending'
     db.transaction.create({
       account,
       amount: (Math.random() * 25 + 25).toFixed(2),
       card,
       currency: 'USD',
       currency_symbol: '$',
-      date_confirmed: Date(),
+      date_confirmed: status === 'confirmed' ? Date() : null,
       date_created: Date(),
       merchant_details: {
         name: 'Uber',
         category_name: 'rideshare',
         category_id: Math.floor(Math.random() * 10) + 1,
       },
-      status: Math.random() < 0.5 ? 'confirmed' : 'pending',
+      status,
     })
   }
 }
