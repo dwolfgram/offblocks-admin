@@ -1,0 +1,15 @@
+{
+  "close": "Close",
+  "save": "Save",
+  "theme": {
+    "dark": "Dark",
+    "light": "Light",
+    "system": "System"
+  },
+  "unexpectedError": "Unexpected error occurred",
+  "validations": {
+    "email": "Email address is invalid",
+    "password": "Password must be at least {{minLength}} characters long",
+    "required": "Value is required"
+  }
+}

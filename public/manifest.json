@@ -1,0 +1,14 @@
+{
+  "name": "AmiLingo",
+  "short_name": "AmiLingo",
+  "description": "",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "logo512.png",
+      "sizes": "512x512"
+    }
+  ]
+}
