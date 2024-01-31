@@ -57,6 +57,10 @@ const Dashboard = () => {
       >
         <Route index element={<Navigate replace to={DASHBOARD_ROUTES.transactionHistory.to} />} />
         <Route path={DASHBOARD_ROUTES.transactionHistory.path} element={<TransactionHistory />} />
+        <Route
+          path={DASHBOARD_ROUTES.transactionHistoryWithPage.path}
+          element={<TransactionHistory />}
+        />
         <Route path={DASHBOARD_ROUTES.transactionDetail.path} element={<TransactionDetail />} />
         <Route path={DASHBOARD_ROUTES.settings.path} element={<Profile />} />
         <Route path="*" element={<NotFound />} />

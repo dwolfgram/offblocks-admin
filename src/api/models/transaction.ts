@@ -23,6 +23,9 @@ export const transactionResponseSchema = z.object({
 
 export const transactionsResponseSchema = z.object({
   transactions: z.array(transactionShema),
+  page: z.number(),
+  limit: z.number(),
+  numOfPages: z.number(),
 })
 
 export type Transaction = z.infer<typeof transactionShema>

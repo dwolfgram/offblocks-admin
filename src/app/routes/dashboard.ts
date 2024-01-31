@@ -11,6 +11,11 @@ export const DASHBOARD_ROUTES = {
     to: '/app/dashboard/transactions',
     absPath: '/app/dashboard/transactions',
   },
+  transactionHistoryWithPage: {
+    path: 'transactions/:page(/*)?',
+    to: (page: string | null) => generatePath('/app/dashboard/transactions/:page', { page }),
+    absPath: '/app/dashboard/transactions/:page',
+  },
   transactionDetail: {
     path: 'transactions/:txId/*',
     to: (txId: string) => generatePath('/app/dashboard/transactions/:txId', { txId }),

@@ -3,16 +3,21 @@ import { fetchAccountTransactions, fetchTransaction } from '../endpoints'
 
 const transactionQueryKeys = {
   all: ['transaction'] as const,
-  transactions: (accountId: string) => [...transactionQueryKeys.all, accountId] as const,
+  transactions: (accountId: string, page: number, limit: number) =>
+    [...transactionQueryKeys.all, accountId, { page, limit }] as const,
   transaction: (accountId: string, txId: string) =>
     [...transactionQueryKeys.all, accountId, txId] as const,
 }
 
-export const useFetchAccountTransactions = (accountId: string) =>
+export const useFetchAccountTransactions = (
+  accountId: string,
+  { page, limit }: { page: number; limit: number },
+) =>
   useQuery({
-    queryKey: transactionQueryKeys.transactions(accountId),
-    queryFn: () => fetchAccountTransactions(accountId),
+    queryKey: transactionQueryKeys.transactions(accountId, page, limit),
+    queryFn: () => fetchAccountTransactions(accountId, { page, limit }),
     enabled: Boolean(accountId),
+    staleTime: 60_000,
   })
 
 export const useFetchTransaction = (accountId: string, txId: string) =>

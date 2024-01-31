@@ -85,7 +85,7 @@ const Table = <TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
-    // manualPagination: true,
+    manualPagination: true,
     onPaginationChange: setPagination,
     onGlobalFilterChange: setFiltering,
     // enableRowSelection: row => row.original.age > 18,
