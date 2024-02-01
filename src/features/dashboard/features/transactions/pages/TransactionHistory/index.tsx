@@ -6,17 +6,19 @@ import Table from '@/common/components/Table'
 import { usePrintErrorMessage } from '@/common/hooks'
 
 import { transactionHistoryColumns } from './columns'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { NumberParam, useQueryParam } from 'use-query-params'
 
+const INITIAL_PAGE = 1
 const INITIAL_PAGE_INDEX = 0
 const INITIAL_LIMIT = 20
 
 const TransactionHistoryTable = () => {
   const onError = usePrintErrorMessage()
 
-  const [page = INITIAL_PAGE_INDEX, setPage] = useQueryParam('page', NumberParam)
+  const [_ = INITIAL_PAGE, setPage] = useQueryParam('page', NumberParam)
   const [limit = INITIAL_LIMIT, setLimit] = useQueryParam('limit', NumberParam)
+  const [pageIndex, setPageIndex] = useState(INITIAL_PAGE_INDEX)
 
   const {
     isPending: accountsIsPending,
@@ -31,16 +33,20 @@ const TransactionHistoryTable = () => {
     error: transactionsError,
     data: transactionsData,
   } = useFetchAccountTransactions(accountsData?.accounts[0]?.id ?? '', {
-    page: page ?? INITIAL_PAGE_INDEX,
+    page: pageIndex,
     limit: limit ?? INITIAL_LIMIT,
   })
 
+  useEffect(() => {
+    setPage(pageIndex + 1)
+  }, [pageIndex, setPage])
+
   const handlePaginationChange = useCallback(
     ({ pageIndex, pageSize }: PaginationConfig) => {
-      setPage(pageIndex)
+      setPageIndex(pageIndex)
       setLimit(pageSize)
     },
-    [setPage, setLimit],
+    [setPageIndex, setLimit],
   )
 
   const tableData = {
@@ -71,7 +77,7 @@ const TransactionHistoryTable = () => {
         handlePagination={handlePaginationChange}
         options={{ sort: true, pagination: true }}
         paginationConfig={{
-          pageIndex: page ?? INITIAL_PAGE_INDEX,
+          pageIndex,
           pageSize: limit ?? INITIAL_LIMIT,
         }}
       />
