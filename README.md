@@ -6,9 +6,16 @@ A dashboard to view a list of transactions and transaction details. APIs includi
 
 Testing Steps:
 
-- Sign up with email and password
+- Sign up with email and password (this will be stored so you can login again with it)
 - View list of transactions and use pagination
 - Click transaction to see transaction detail modal
+- Light and dark themes provided
+
+Mock data & apis live in src/mocks.
+Querying / endpoints are in src/api.
+
+The API is built to be able to pull lists of transactions by accounts where ideally only the necessary fields to show them in a table are returned. Then, when
+a user clicks into the modal it can load the whole object. React-query makes it really easy to set how long the data is considered fresh for and so data that won't change can be cached for a long time.
 
 ## Installation
 
