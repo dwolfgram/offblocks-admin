@@ -18,7 +18,7 @@ const TransactionStatus = ({ status, confirmationDate }: TransactionStatusProps)
         <div className="m-auto flex w-full max-w-[350px] flex-col gap-6">
           <Typography
             className={cn(
-              'w-fit cursor-text rounded-md px-2.5 py-1.5 text-sm font-medium dark:bg-opacity-10',
+              'w-fit cursor-text rounded-md px-2.5 py-1.5 text-sm font-medium capitalize dark:bg-opacity-10',
               className,
             )}
           >

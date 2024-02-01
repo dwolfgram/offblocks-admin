@@ -18,6 +18,7 @@ export const useFetchAccountTransactions = (
     queryFn: () => fetchAccountTransactions(accountId, { page, limit }),
     enabled: Boolean(accountId),
     staleTime: 60_000,
+    placeholderData: (placeholder) => placeholder,
   })
 
 export const useFetchTransaction = (accountId: string, txId: string) =>

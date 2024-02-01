@@ -5,9 +5,9 @@ import { useFetchMyUser } from '@/api'
 import { useSignOut } from '@/common/auth'
 import { Loading, NotFound, ResultError, UserDropdown, Layout } from '@/common/components'
 import { DASHBOARD_ROUTES } from '@/app/routes/dashboard'
+import TransactionDetail from './features/transactions/pages/TransactionDetail'
 
 const TransactionHistory = lazy(() => import('./features/transactions/pages/TransactionHistory'))
-const TransactionDetail = lazy(() => import('./features/transactions/pages/TransactionDetail'))
 const Profile = lazy(() => import('./features/settings'))
 
 const Dashboard = () => {
@@ -35,37 +35,37 @@ const Dashboard = () => {
   }
 
   return (
-    <Routes>
-      <Route
-        element={
-          <Layout
-            headerProps={{
-              baseUrl: DASHBOARD_ROUTES.index.to,
-              links: [{ to: DASHBOARD_ROUTES.transactionHistory.to, label: 'Transactions' }],
-              endSlot: (
-                <>
-                  <UserDropdown email={data.user.email} />
-                </>
-              ),
-            }}
-          >
-            <Suspense fallback={<Loading />}>
-              <Outlet />
-            </Suspense>
-          </Layout>
-        }
-      >
-        <Route index element={<Navigate replace to={DASHBOARD_ROUTES.transactionHistory.to} />} />
-        <Route path={DASHBOARD_ROUTES.transactionHistory.path} element={<TransactionHistory />} />
+    <>
+      <Routes>
         <Route
-          path={DASHBOARD_ROUTES.transactionHistoryWithPage.path}
-          element={<TransactionHistory />}
-        />
-        <Route path={DASHBOARD_ROUTES.transactionDetail.path} element={<TransactionDetail />} />
-        <Route path={DASHBOARD_ROUTES.settings.path} element={<Profile />} />
-        <Route path="*" element={<NotFound />} />
-      </Route>
-    </Routes>
+          element={
+            <Layout
+              headerProps={{
+                baseUrl: DASHBOARD_ROUTES.index.to,
+                links: [{ to: DASHBOARD_ROUTES.transactionHistory.to, label: 'Transactions' }],
+                endSlot: (
+                  <>
+                    <UserDropdown email={data.user.email} />
+                  </>
+                ),
+              }}
+            >
+              <Suspense fallback={<Loading />}>
+                <Outlet />
+              </Suspense>
+            </Layout>
+          }
+        >
+          <Route index element={<Navigate replace to={DASHBOARD_ROUTES.transactionHistory.to} />} />
+          <Route path={DASHBOARD_ROUTES.transactionHistory.path} element={<TransactionHistory />}>
+            <Route path={DASHBOARD_ROUTES.transactionDetail.path} element={<TransactionDetail />} />
+          </Route>
+
+          <Route path={DASHBOARD_ROUTES.settings.path} element={<Profile />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </>
   )
 }
 

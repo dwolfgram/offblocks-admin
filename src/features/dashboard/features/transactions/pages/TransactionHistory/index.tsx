@@ -4,10 +4,10 @@ import { Loading, Typography } from '@/common/components'
 import type { PaginationConfig } from '@/common/components/Table'
 import Table from '@/common/components/Table'
 import { usePrintErrorMessage } from '@/common/hooks'
-
-import { transactionHistoryColumns } from './columns'
+import { Outlet } from 'react-router-dom'
 import { useCallback, useEffect, useState } from 'react'
 import { NumberParam, useQueryParam } from 'use-query-params'
+import { transactionHistoryColumns } from './columns'
 
 const INITIAL_PAGE = 1
 const INITIAL_PAGE_INDEX = 0
@@ -81,6 +81,7 @@ const TransactionHistoryTable = () => {
           pageSize: limit ?? INITIAL_LIMIT,
         }}
       />
+      <Outlet />
     </div>
   )
 }

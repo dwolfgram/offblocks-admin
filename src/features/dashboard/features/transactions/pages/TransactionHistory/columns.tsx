@@ -3,8 +3,10 @@ import type { ColumnDef } from '@tanstack/react-table'
 import TransactionStatus from '../../components/TransactionStatus'
 import { Button } from '@/common/components/ui/button'
 import { Maximize2Icon } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { DASHBOARD_ROUTES } from '@/app/routes'
 
-const formatDate = (dateOrString: Date | string) => {
+export const formatDate = (dateOrString: Date | string) => {
   const dateToConvert = typeof dateOrString === 'string' ? new Date(dateOrString) : dateOrString
   return new Intl.DateTimeFormat('en-US', {
     month: 'short',
@@ -63,9 +65,11 @@ export const transactionHistoryColumns: ColumnDef<TransactionsResponse['transact
         const tx = row.original
         return (
           <div className="flex justify-end">
-            <Button onClick={() => console.log(`${tx.id}-yo`)} size={'sm'} variant={'outline'}>
-              <Maximize2Icon size={14} />
-            </Button>
+            <Link to={DASHBOARD_ROUTES.transactionDetail.to(tx.account?.id ?? '', tx.id)}>
+              <Button size={'sm'} variant={'outline'}>
+                <Maximize2Icon size={14} />
+              </Button>
+            </Link>
           </div>
         )
       },

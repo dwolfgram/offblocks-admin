@@ -7,19 +7,52 @@ import { type ApiError } from '@/api/utils'
 import { db } from '../db'
 
 const getTokenFromHeader = (authHeader: string | null) => (authHeader ?? '').split(' ')[1]
-const deleteUnwantedKeys = (arr: unknown[], keysToRemove: unknown[]) => {
-  for (const obj of arr) {
-    for (const key of keysToRemove) {
-      // @ts-expect-error unkown error
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-      delete obj[key]
-    }
-  }
-}
+// const deleteUnwantedKeys = (arr: unknown[], keysToRemove: unknown[]) => {
+//   for (const obj of arr) {
+//     for (const key of keysToRemove) {
+//       // @ts-expect-error unkown error
+//       // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+//       delete obj[key]
+//     }
+//   }
+// }
 
-const TRANSACTION_HISTORY_KEYS_TO_REMOVE = ['account', 'card', 'merchant_details']
+// const TRANSACTION_HISTORY_KEYS_TO_REMOVE = ['card', 'merchant_details']
 
 export const TransactionHandlers: HttpHandler[] = [
+  http.get<{ accountId: string; txId: string }, never, TransactionResponse | ApiError>(
+    '/api/transactions/:accountId/:txId',
+    async ({ request, params: { accountId, txId } }) => {
+      const token = getTokenFromHeader(request.headers.get(RequestHeader.Authorization))
+
+      if (!token) {
+        await delay(100)
+        return HttpResponse.json<ApiError>(
+          { status: Status.Unauthorized, message: 'Unauthorized' },
+          { status: Status.Unauthorized },
+        )
+      }
+      const transaction = db.transaction.findFirst({
+        where: {
+          id: {
+            equals: txId,
+          },
+          account: {
+            id: {
+              equals: accountId,
+            },
+            owner: {
+              id: {
+                equals: token,
+              },
+            },
+          },
+        },
+      })
+      await delay(100)
+      return HttpResponse.json<TransactionResponse>({ transaction })
+    },
+  ),
   http.get<{ accountId: string }, never, TransactionsResponse | ApiError>(
     '/api/transactions/:accountId',
     async ({ request }) => {
@@ -63,8 +96,8 @@ export const TransactionHandlers: HttpHandler[] = [
         .getAll()
         .sort((a, b) => Number.parseFloat(b.amount) - Number.parseFloat(a.amount))
         .slice(skip, skip + limitNum)
-
-      deleteUnwantedKeys(transactions, TRANSACTION_HISTORY_KEYS_TO_REMOVE)
+      // commented out due to weird behavior
+      // deleteUnwantedKeys(transactions, TRANSACTION_HISTORY_KEYS_TO_REMOVE)
       await delay(100)
       return HttpResponse.json<TransactionsResponse>({
         transactions,
@@ -72,39 +105,6 @@ export const TransactionHandlers: HttpHandler[] = [
         limit: limitNum,
         numOfPages: Math.ceil(count / limitNum),
       })
-    },
-  ),
-  http.get<{ accountId: string; txId: string }, never, TransactionResponse | ApiError>(
-    '/api/transactions/:accountId/:txId',
-    async ({ request, params: { accountId, txId } }) => {
-      const token = getTokenFromHeader(request.headers.get(RequestHeader.Authorization))
-
-      if (!token) {
-        await delay(100)
-        return HttpResponse.json<ApiError>(
-          { status: Status.Unauthorized, message: 'Unauthorized' },
-          { status: Status.Unauthorized },
-        )
-      }
-      const transaction = db.transaction.findFirst({
-        where: {
-          id: {
-            equals: txId,
-          },
-          account: {
-            id: {
-              equals: accountId,
-            },
-            owner: {
-              id: {
-                equals: token,
-              },
-            },
-          },
-        },
-      })
-      await delay(100)
-      return HttpResponse.json<TransactionResponse>({ transaction })
     },
   ),
 ]

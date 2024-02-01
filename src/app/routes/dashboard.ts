@@ -7,18 +7,14 @@ export const DASHBOARD_ROUTES = {
     absPath: '/app/dashboard',
   },
   transactionHistory: {
-    path: 'transactions/*',
+    path: 'transactions',
     to: '/app/dashboard/transactions',
     absPath: '/app/dashboard/transactions',
   },
-  transactionHistoryWithPage: {
-    path: 'transactions/:page(/*)?',
-    to: (page: string | null) => generatePath('/app/dashboard/transactions/:page', { page }),
-    absPath: '/app/dashboard/transactions/:page',
-  },
   transactionDetail: {
-    path: 'transactions/:txId/*',
-    to: (txId: string) => generatePath('/app/dashboard/transactions/:txId', { txId }),
+    path: '/transactions/:accountId/:txId',
+    to: (accountId: string, txId: string) =>
+      generatePath('/app/dashboard/transactions/:accountId/:txId', { txId, accountId }),
     absPath: '/app/dashboard/transactions/:txId',
   },
   settings: {
@@ -41,9 +37,12 @@ export const DASHBOARD_ROUTES = {
 >
 
 export const useTransactionDetailParams = () => {
-  const { txId } = useParams<'txId'>()
+  const { txId, accountId } = useParams<{ txId: string; accountId: string }>()
   if (!txId) {
     throw new Error('Missing txId parameter')
   }
-  return txId
+  if (!accountId) {
+    throw new Error('Missing accountId parameter')
+  }
+  return { accountId, txId }
 }
