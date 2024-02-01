@@ -16,9 +16,9 @@ const INITIAL_LIMIT = 20
 const TransactionHistoryTable = () => {
   const onError = usePrintErrorMessage()
 
-  const [_ = INITIAL_PAGE, setPage] = useQueryParam('page', NumberParam)
+  const [page = INITIAL_PAGE, setPage] = useQueryParam('page', NumberParam)
   const [limit = INITIAL_LIMIT, setLimit] = useQueryParam('limit', NumberParam)
-  const [pageIndex, setPageIndex] = useState(INITIAL_PAGE_INDEX)
+  const currentPageIndex = page ? page - 1 : INITIAL_PAGE_INDEX
 
   const {
     isPending: accountsIsPending,
@@ -33,20 +33,16 @@ const TransactionHistoryTable = () => {
     error: transactionsError,
     data: transactionsData,
   } = useFetchAccountTransactions(accountsData?.accounts[0]?.id ?? '', {
-    page: pageIndex,
+    page: currentPageIndex,
     limit: limit ?? INITIAL_LIMIT,
   })
 
-  useEffect(() => {
-    setPage(pageIndex + 1)
-  }, [pageIndex, setPage])
-
   const handlePaginationChange = useCallback(
     ({ pageIndex, pageSize }: PaginationConfig) => {
-      setPageIndex(pageIndex)
       setLimit(pageSize)
+      setPage(pageIndex + 1)
     },
-    [setPageIndex, setLimit],
+    [setLimit, setPage],
   )
 
   const tableData = {
@@ -77,7 +73,7 @@ const TransactionHistoryTable = () => {
         handlePagination={handlePaginationChange}
         options={{ sort: true, pagination: true }}
         paginationConfig={{
-          pageIndex,
+          pageIndex: currentPageIndex,
           pageSize: limit ?? INITIAL_LIMIT,
         }}
       />
