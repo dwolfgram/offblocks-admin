@@ -3,7 +3,7 @@ import type { ColumnDef } from '@tanstack/react-table'
 import TransactionStatus from '../../components/TransactionStatus'
 import { Button } from '@/common/components/ui/button'
 import { Maximize2Icon } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { DASHBOARD_ROUTES } from '@/app/routes'
 
 export const formatDate = (dateOrString: Date | string) => {
@@ -62,10 +62,17 @@ export const transactionHistoryColumns: ColumnDef<TransactionsResponse['transact
     {
       id: 'actions',
       cell: ({ row }) => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const [searchParams] = useSearchParams()
         const tx = row.original
         return (
           <div className="flex justify-end">
-            <Link to={DASHBOARD_ROUTES.transactionDetail.to(tx.account?.id ?? '', tx.id)}>
+            <Link
+              to={{
+                pathname: DASHBOARD_ROUTES.transactionDetail.to(tx.account?.id ?? '', tx.id),
+                search: searchParams.toString(),
+              }}
+            >
               <Button size={'sm'} variant={'outline'}>
                 <Maximize2Icon size={14} />
               </Button>

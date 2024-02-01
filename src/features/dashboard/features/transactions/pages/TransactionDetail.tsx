@@ -2,9 +2,9 @@ import { useFetchTransaction } from '@/api'
 import { Loading, Typography } from '@/common/components'
 import { Modal, ModalContent, ModalHeader } from '@/common/components/ui/modal'
 import { CheckIcon, HourglassIcon } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
-import { useTransactionDetailParams } from '@/app/routes/dashboard'
+import { DASHBOARD_ROUTES, useTransactionDetailParams } from '@/app/routes/dashboard'
 import { usePrintErrorMessage } from '@/common/hooks'
 import { Separator } from '@/common/components/ui/separator'
 import TransactionStatus from '../components/TransactionStatus'
@@ -14,6 +14,7 @@ import SeparatedDataRows from '@/common/components/SeparatedDataRows'
 
 const TransactionDetail = () => {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { txId, accountId } = useTransactionDetailParams()
   const onError = usePrintErrorMessage()
 
@@ -27,7 +28,11 @@ const TransactionDetail = () => {
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
-      navigate(-1)
+      // Short term fix: refreshing while modal is open leads to unwanted behavior due to qs
+      navigate({
+        pathname: DASHBOARD_ROUTES.transactionHistory.to,
+        search: searchParams.toString(),
+      })
     }
   }
 
