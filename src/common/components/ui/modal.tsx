@@ -30,7 +30,7 @@ const ModalOverlay = React.forwardRef<
 ModalOverlay.displayName = ModalPrimitive.Overlay.displayName
 
 const ModalVariants = cva(
-  'fixed z-50 mx-auto my-auto h-fit max-h-[700px] items-center justify-center overflow-y-auto overflow-x-hidden bg-background px-8 py-14 animate-in data-[state=open]:fade-in-90 data-[state=open]:slide-in-from-bottom-10 sm:rounded-lg sm:zoom-in-90 data-[state=open]:sm:slide-in-from-bottom-0 md:inset-0',
+  'fixed inset-0 z-50 mx-auto my-auto h-fit max-h-[700px] items-center justify-center overflow-y-auto overflow-x-hidden bg-background px-8 py-14 animate-in data-[state=open]:fade-in-90 data-[state=open]:slide-in-from-bottom-10 sm:rounded-lg sm:zoom-in-90 data-[state=open]:sm:slide-in-from-bottom-0',
   {
     defaultVariants: {
       size: 'lg',
