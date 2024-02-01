@@ -11,6 +11,7 @@ import Router from './providers/Router'
 import GlobalErrorBoundary from './GlobalErrorBoundary'
 import PersistAuthGate from './PersistAuthGate'
 import App from './App'
+import QueryParamsProvider from './providers/QueryParams'
 
 const Root = () => (
   <GlobalErrorBoundary>
@@ -23,7 +24,9 @@ const Root = () => (
             <Query>
               <PersistAuthGate loadingFallback={<Loading />}>
                 <Router>
-                  <App />
+                  <QueryParamsProvider>
+                    <App />
+                  </QueryParamsProvider>
                 </Router>
               </PersistAuthGate>
             </Query>

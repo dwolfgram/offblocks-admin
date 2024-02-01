@@ -20,7 +20,7 @@ import {
 import Pagination from './Pagination'
 import type { TableButton } from './ViewOptions'
 import ViewOptions from './ViewOptions'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 
 export interface PaginationConfig {
   pageIndex: number
@@ -62,7 +62,7 @@ const Table = <TData, TValue>({
   const [{ pageIndex, pageSize }, setPagination] = useState(
     paginationConfig ?? {
       pageIndex: 0,
-      pageSize: 80,
+      pageSize: 20,
     },
   )
 
@@ -73,7 +73,11 @@ const Table = <TData, TValue>({
     }),
     [pageIndex, pageSize],
   )
-  handlePagination(pagination)
+
+  useEffect(() => {
+    handlePagination(pagination)
+  }, [handlePagination, pagination])
+
   const table = useReactTable({
     data: data.rows,
     columns,

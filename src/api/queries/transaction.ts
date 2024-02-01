@@ -4,7 +4,7 @@ import { fetchAccountTransactions, fetchTransaction } from '../endpoints'
 const transactionQueryKeys = {
   all: ['transaction'] as const,
   transactions: (accountId: string, page: number, limit: number) =>
-    [...transactionQueryKeys.all, accountId, { page, limit }] as const,
+    [...transactionQueryKeys.all, accountId, 'history', page, limit] as const,
   transaction: (accountId: string, txId: string) =>
     [...transactionQueryKeys.all, accountId, txId] as const,
 }

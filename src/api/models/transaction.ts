@@ -1,10 +1,12 @@
 import { z } from 'zod'
 import { accountShema } from '.'
+import { cardShema } from './card'
 
 export const transactionShema = z.object({
   id: z.string(),
   account: z.optional(accountShema),
   amount: z.string(),
+  card: z.optional(cardShema),
   currency: z.string(),
   currency_symbol: z.string(),
   date_confirmed: z.string().nullable(),
@@ -17,12 +19,18 @@ export const transactionShema = z.object({
   status: z.string(),
 })
 
+export const lightWeightTransactionSchema = transactionShema.partial({
+  account: true,
+  card: true,
+  merchant_details: true,
+})
+
 export const transactionResponseSchema = z.object({
   transaction: z.nullable(transactionShema),
 })
 
 export const transactionsResponseSchema = z.object({
-  transactions: z.array(transactionShema),
+  transactions: z.array(lightWeightTransactionSchema),
   page: z.number(),
   limit: z.number(),
   numOfPages: z.number(),

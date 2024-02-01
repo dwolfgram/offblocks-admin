@@ -61,7 +61,7 @@ export const createDummyData = (userId: string) => {
     name: 'OffBlocks',
     owner: user,
   })
-  for (const _ of Array.from({ length: 200 })) {
+  for (const _ of Array.from({ length: 500 })) {
     const status = Math.random() < 0.5 ? 'confirmed' : 'pending'
     db.transaction.create({
       account,

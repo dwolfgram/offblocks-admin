@@ -5,18 +5,18 @@ import type { PaginationConfig } from '@/common/components/Table'
 import Table from '@/common/components/Table'
 import { usePrintErrorMessage } from '@/common/hooks'
 
-import usePagination from '@/common/hooks/usePagination'
 import { transactionHistoryColumns } from './columns'
+import { useCallback } from 'react'
+import { NumberParam, useQueryParam } from 'use-query-params'
 
 const INITIAL_PAGE_INDEX = 0
 const INITIAL_LIMIT = 20
 
 const TransactionHistoryTable = () => {
   const onError = usePrintErrorMessage()
-  const { currentPage, currentLimit, onChangePage, onChangeLimit } = usePagination({
-    initialPage: INITIAL_PAGE_INDEX,
-    initialLimit: INITIAL_LIMIT,
-  })
+
+  const [page = INITIAL_PAGE_INDEX, setPage] = useQueryParam('page', NumberParam)
+  const [limit = INITIAL_LIMIT, setLimit] = useQueryParam('limit', NumberParam)
 
   const {
     isPending: accountsIsPending,
@@ -31,14 +31,17 @@ const TransactionHistoryTable = () => {
     error: transactionsError,
     data: transactionsData,
   } = useFetchAccountTransactions(accountsData?.accounts[0]?.id ?? '', {
-    page: currentPage,
-    limit: currentLimit,
+    page: page ?? INITIAL_PAGE_INDEX,
+    limit: limit ?? INITIAL_LIMIT,
   })
 
-  const handlePaginationChange = ({ pageIndex, pageSize }: PaginationConfig) => {
-    onChangePage(pageIndex)
-    onChangeLimit(pageSize)
-  }
+  const handlePaginationChange = useCallback(
+    ({ pageIndex, pageSize }: PaginationConfig) => {
+      setPage(pageIndex)
+      setLimit(pageSize)
+    },
+    [setPage, setLimit],
+  )
 
   const tableData = {
     rows: transactionsData?.transactions ?? [],
@@ -50,11 +53,11 @@ const TransactionHistoryTable = () => {
   }
 
   if (transactionsIsError) {
-    onError(transactionsError)
+    onError(transactionsError, 'TransactionHistoryError')
   }
 
   if (accountsIsError) {
-    onError(accountsError)
+    onError(accountsError, 'TransactionHistoryAccountsError')
   }
 
   return (
@@ -68,8 +71,8 @@ const TransactionHistoryTable = () => {
         handlePagination={handlePaginationChange}
         options={{ sort: true, pagination: true }}
         paginationConfig={{
-          pageIndex: currentPage,
-          pageSize: currentLimit,
+          pageIndex: page ?? INITIAL_PAGE_INDEX,
+          pageSize: limit ?? INITIAL_LIMIT,
         }}
       />
     </div>
